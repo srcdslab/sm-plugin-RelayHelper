@@ -82,6 +82,11 @@ void OnSummaryReceived(HTTPResponse response, int userid) {
 		return;
 	}
 		
+	if(players.Length <= 0) {
+		delete players;
+		return;
+	}	
+	
 	JSONObject player = view_as<JSONObject>(players.Get(0));
 	delete players;
 	
@@ -203,7 +208,7 @@ stock void SendDiscordMessage(Global_Stuffs plugin, MessageType type, int admin,
  
 	char webhookURL[PLATFORM_MAX_PATH];
 	if(!GetWebhook(plugin, webhookURL, sizeof(webhookURL))) {
-	    LogError("[Extended-Discord-Relay] Invalid or no webhook specified in plugin config! for %s", title);
+	    LogError("%s Invalid or no webhook specified in plugin config! for %s", PLUGIN_NAME, title);
 	    return;
 	}
 	
