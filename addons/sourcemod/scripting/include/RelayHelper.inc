@@ -24,6 +24,7 @@ enum struct Global_Stuffs {
 	ConVar enable;
 	ConVar webhook;
 	ConVar website;
+	ConVar redirect;
 }
 
 stock void RelayHelper_PluginStart() {
@@ -211,6 +212,13 @@ stock void SendDiscordMessage(Global_Stuffs plugin, MessageType type, int admin,
 	    LogError("%s Invalid or no webhook specified in plugin config! for %s", PLUGIN_NAME, title);
 	    return;
 	}
+
+	char webredirectURL[PLATFORM_MAX_PATH];
+	if(!GetRedirectLink(plugin, webredirectURL, sizeof(webredirectURL))) {
+	    LogError("%s Invalid or no redirect URL specified in plugin config! for %s", PLUGIN_NAME, title);
+	    return;
+	}
+	
 	
 	/* Duration */
 	if(type != Message_Type_Kunban && type != Message_Type_Eunban && type != Message_Type_Unmute && type != Message_Type_Ungag) {
@@ -339,6 +347,16 @@ int GetTypeColor(MessageType type) {
 
 bool GetWebhook(Global_Stuffs plugin, char[] url, int maxlen) {
 	plugin.webhook.GetString(url, maxlen);
+	
+	if(!url[0]) {
+		return false;
+	}
+		
+	return true;
+}
+
+bool GetRedirectLink(Global_Stuffs plugin, char[] url, int maxlen) {
+	plugin.redirect.GetString(url, maxlen);
 	
 	if(!url[0]) {
 		return false;
